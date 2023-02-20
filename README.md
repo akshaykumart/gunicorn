@@ -6,10 +6,12 @@ In this post, we will see how to use nginx with gunicorn to serve django applica
 steps to be followed:
 
 step1: Installing Python and nginx
+
        $ sudo apt update
        $ sudo apt install python3-pip python3-dev nginx
 
 step2: Creating Virtual Environment
+
        $ sudo pip3 install virtualenv                 //Installing Virtual Env package
        $ mkdir ~/projectdir                           //create a project directory to host our Django application
        $ cd ~/projectdir                              
@@ -17,21 +19,26 @@ step2: Creating Virtual Environment
        $ source env/bin/activate                      //activate the virtual environment
 
 step3: Installing Django and Gunicorn
+
        $ sudo apt update
        $ pip install django gunicorn
 
 step4: Setting up an Django project / import the created one to the directory
+
        $ django-admin startproject <project_name> 
 
 step5: Add your IP address or domain to the ALLOWED_HOSTS variable in settings.py
 
 step6: Allow the port over firewall
+
        $ sudo ufw allow 8000
 
 step7: Validate Django Development server 
+
        $ ~/projectdir/manage.py runserver 0.0.0.0:8000
       
 step8: Configuring gunicorn
+
        $ gunicorn --bind 0.0.0.0:8000 textutils.wsgi         //checking gunicorn's ability to serve application
        $ deactivate                                          //Deactivate the virtualenvironment
        $ sudo vim /etc/systemd/system/gunicorn.socket        //create a system socket file for gunicorn 
@@ -72,12 +79,15 @@ step8: Configuring gunicorn
             2. Replace mysite.wsgi with your Django project name
       
 step9: start and enable the gunicorn socket
+
        $ sudo systemctl start gunicorn.socket
        $ sudo systemctl enable gunicorn.socket
 
 step10: Configuring Nginx as a reverse proxy
         Create a configuration file for Nginx
+        
         $sudo nano /etc/nginx/sites-available/mysite
+        
         Paste the below contents inside the file created
            
            server {
@@ -96,13 +106,16 @@ step10: Configuring Nginx as a reverse proxy
             }
  
 step11: Activate the configuration 
-         $ sudo ln -s /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/
+
+        $ sudo ln -s /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/
 
 step12: Delete the default config files 
+
         $ cd /etc/nginx/sites-enabled
         $ sudo rm default
 
 step13: Restart nginx service
+
         $ sudo systemctl restart nginx
 
 step14: Validate
